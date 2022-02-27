@@ -1,0 +1,47 @@
+---
+title: "Regression Analysis and Diagnostics"
+author: "Hriday Baghar"
+output: html_notebook
+---
+
+# Regression model
+```{r}
+data <- read.csv("Cleaned News Popularity.csv")
+str(data)
+
+names(data)
+```
+```{r}
+#Building regression model with initial chosen variables
+
+base.model <- lm(shares ~ Day.of.Week + Category + n_tokens_title + n_tokens_content +
+                   num_hrefs + num_imgs + num_videos + average_token_length +
+                   global_subjectivity + global_sentiment_polarity +
+                   rate_positive_words + rate_negative_words +
+                   title_subjectivity + title_subjectivity, data = data)
+
+summary(base.model)
+```
+
+```{r}
+plot(base.model)
+```
+```{r}
+boxplot(log10(base.model$residuals))
+```
+
+```{r}
+#Transforming target variable to log scale and repeating model building and diagnostics
+
+log.model <- lm(log(shares) ~ Day.of.Week + Category + n_tokens_title + n_tokens_content +
+                   num_hrefs + num_imgs + num_videos + average_token_length +
+                   global_subjectivity + global_sentiment_polarity +
+                   rate_positive_words + rate_negative_words +
+                   title_subjectivity + title_subjectivity, data = data)
+
+summary(log.model)
+```
+```{r}
+plot(log.model)
+```
+
