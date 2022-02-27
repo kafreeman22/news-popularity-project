@@ -1,0 +1,198 @@
+---
+title: "Analysis of News Articles"
+author: Shrusti Ghela, Hriday Baghar, Prachi Bambarkar, Syed Obaid Dawarki, Keegan Freeman
+date: "25/02/2022"
+output: html_document
+---
+
+# Description 
+
+## Overview and Motivation
+
+Media companies like Mashable produce tens of thousands of articles per year, all with varying degrees of virality. The virality of the content produced is key to a media company’s profitability. An accurate model that could predict parameters that increase the virality of an article, specifically, the number of social shares it receives, would be extremely valuable. 
+
+## Initial Questions
+
+## The Data
+
+We started with a base dataset containing meta-data of nearly 40,000 unique Mashable blog articles over the past 5 years. The meta-data includes 61 different attributes ranging from metrics like word counts to sentiment analysis. This dataset is hosted on the Machine Learning Repository from the Center for Machine Learning and Intelligent Systems at the University of California Irvine. 
+
+If time permits, in addition to the meta-data, we can also also use the actual article data(use a webscraper to collect the actual article titles, date published, author and article content.)
+
+## Data Cleaning
+
+##Exploratory Data Analysis
+
+```{r}
+#read in csv
+
+MyData <- read.csv(file="Cleaned News Popularity.csv", header=TRUE, sep=",", stringsAsFactors = FALSE)
+
+MyData_abb <- head(MyData,100)
+
+mean(MyData$shares)
+```
+To better understand our data, we first wanted to see how the number of shares varied for the articles in our data set. Looking at the summary information, we can see that the average article received about 3000 shares.
+
+```{r}
+median(MyData$shares)
+
+```
+
+```{r}
+boxplot(MyData$shares)
+```
+Looking at a box and whisker plot, we see that there are many outliers that fell well above the median.
+
+```{r}
+boxplot(log10(MyData$shares))
+```
+
+```{r}
+quantile(MyData$shares)
+```
+
+How do we want to deal with outliers?
+Do we eliminate them based on some specific threshold. The thinking being that our model should be representative of the typical Mashable article. If it happens to underestimate the actual result, due to an extremely rare, and popular article, that is should be acceptable, since the blog will simply have more popularity than expected.
+
+kw_min_min, kw_max_min, kw_avg_min, kw_min_max, kw_max_max, kw_avg_max, kw_min_avg, kw_max_avg, kw_avg_avg do we want to use these?
+
+When conducting regressions with multiple predictors, it is important to exclude variables that are strongly correlated with each other.  Additionally, viewing the correlations of predictors can help us understand which of the predictors are most strongly correlated with shares.  You can see the correlation plot below. From this correlation analysis, we decided to remove the variables from our regression models listed in the table below, as these were highly correlated with another variable. 
+
+```{r}
+m <- cor(MyData[,sapply(MyData,is.numeric)])
+m <- m[-1,-1]
+heatmap(m)
+```
+
+```{r}
+library(ggplot2)
+#sharesbycategory <- aggregate(MyData$shares, list(MyData$Category), FUN=mean)
+#ggplot(data=sharesbycategory) +
+    #geom_col(aes(x=Group.1, y=x))
+
+#barplot(sharesbycategory$x, names.arg = sharesbycategory$Group.1)
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = log10(shares))) +         
+  geom_boxplot() 
+```
+
+
+
+```{r}
+#titlebycategory <- aggregate(MyData$n_tokens_title, list(MyData$Category), FUN=mean)
+#ggplot(data=titlebycategory) +
+    #geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = n_tokens_title)) +         
+  geom_boxplot()
+```
+
+```{r}
+#contentbycategory <- aggregate(MyData$n_tokens_content, list(MyData$Category), FUN=mean)
+#ggplot(data=contentbycategory) +
+    #geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = n_tokens_content)) +         
+  geom_boxplot()
+```
+
+```{r}
+#tokenlengthbycategory <- aggregate(MyData$average_token_length, list(MyData$Category), FUN=mean)
+#ggplot(data=tokenlengthbycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = average_token_length)) +         
+  geom_boxplot()
+```
+
+```{r}
+#polaritybycategory <- aggregate(MyData$global_sentiment_polarity, list(MyData$Category), FUN=mean)
+#ggplot(data=polaritybycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = global_sentiment_polarity )) +         
+  geom_boxplot()
+```
+
+```{r}
+#subjectivitybycategory <- aggregate(MyData$global_subjectivity, list(MyData$Category), FUN=mean)
+#ggplot(data=subjectivitybycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = global_subjectivity)) +         
+  geom_boxplot()
+```
+
+```{r}
+#positivitybycategory <- aggregate(MyData$rate_positive_words, list(MyData$Category), FUN=mean)
+#ggplot(data=positivitybycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = rate_positive_words)) +         
+  geom_boxplot()
+```
+
+```{r}
+#negativitybycategory <- aggregate(MyData$rate_negative_words, list(MyData$Category), FUN=mean)
+#ggplot(data=negativitybycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = rate_negative_words )) +         
+  geom_boxplot()
+```
+
+```{r}
+#imagesbycategory <- aggregate(MyData$num_imgs, list(MyData$Category), FUN=mean)
+#ggplot(data=imagesbycategory) +
+#    geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y=num_imgs)) +         
+  geom_boxplot()
+```
+
+```{r}
+#videobycategory <- aggregate(MyData$num_videos, list(MyData$Category), FUN=mean)
+#ggplot(data=videobycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = num_videos )) +         
+  geom_boxplot()
+```
+
+```{r}
+#linksbycategory <- aggregate(MyData$num_hrefs, list(MyData$Category), FUN=mean)
+#ggplot(data=linksbycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = num_hrefs)) +         
+  geom_boxplot()
+```
+
+```{r}
+#sharesbycategory <- aggregate(MyData$shares, list(MyData$Category), FUN=mean)
+#ggplot(data=sharesbycategory) +
+#   geom_col(aes(x=Group.1, y=x))
+```
+```{r}
+ggplot(MyData, aes(x = Category, y = log10(shares))) +         
+  geom_boxplot()
+```
+Independent variables – number of words in article, number of words in title, average
+token (word) length in article, article polarity, article subjectivity, rate of positive words,
+rate of negative words, day of publication (Monday-Sunday), article category (business,
+lifestyle, technology, world, entertainment, social media), number of images, number of
+videos, number of hyperlinks
+
+
