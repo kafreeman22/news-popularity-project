@@ -14,8 +14,6 @@ a)Introduction:-
 Social media is a real world phenomenon of the saying "If the tree falls on the ground and no one is around to hear it, does it make a sound?" Mashable, an independent news platform, is a part of this social media world providing the latest news articles on digital culture, social media and technology. However, not every new article is a hit, and our group aims to find what makes an article popular by analyzing various factors related to the article.
 
 
-
-
 b)Data Set Description:-
 **Source** :
 We downloaded this data from UCI machine learning repository. The link for the source is:
@@ -29,35 +27,35 @@ Number of Attributes: 61
 Missing Values?: No missing values
 
 Information about the attributes used for analyses: 
-Day of Week: column created from pivoted rows that contains the day of the week the article was published.
-Category: column created from pivoted rows that contains the the appropriate boolean value of the category that it belonged to.
-n_tokens_title: Number of words in the title
-n_tokens_content: Number of words in the content
-n_unique_tokens: Rate of unique words in the content
-n_non_stop_unique_tokens: Rate of unique non-stop words in the content
-num_hrefs: Number of links
-num_imgs: Number of images
-num_videos: Number of videos
-average_token_length: Average length of the words in the content
-num_keywords: Number of keywords in the metadata
-global_subjectivity: Text subjectivity
-global_sentiment_polarity: Text sentiment polarity
-global_rate_positive_words: Rate of positive words in the content
-global_rate_negative_words: Rate of negative words in the content
-rate_positive_words: Rate of positive words among non-neutral tokens
-rate_negative_words: Rate of negative words among non-neutral tokens
-avg_positive_polarity: Avg. polarity of positive words
-avg_negative_polarity: Avg. polarity of negative words
-title_subjectivity: Title subjectivity
-title_sentiment_polarity:  Title polarity
-abs_title_subjectivity: Absolute subjectivity level
-abs_title_sentiment_polarity: Absolute polarity level
-shares: Number of shares (target)
 
-
+- Day of Week: column created from pivoted rows that contains the day of the week the article was published.
+- Category: column created from pivoted rows that contains the the appropriate boolean value of the category that it belonged to.
+- n_tokens_title: Number of words in the title
+- n_tokens_content: Number of words in the content
+- n_unique_tokens: Rate of unique words in the content
+- n_non_stop_unique_tokens: Rate of unique non-stop words in the content
+- num_hrefs: Number of links
+- num_imgs: Number of images
+- num_videos: Number of videos
+- average_token_length: Average length of the words in the content
+- num_keywords: Number of keywords in the metadata
+- global_subjectivity: Text subjectivity
+- global_sentiment_polarity: Text sentiment polarity
+- global_rate_positive_words: Rate of positive words in the content
+- global_rate_negative_words: Rate of negative words in the content
+- rate_positive_words: Rate of positive words among non-neutral tokens
+- rate_negative_words: Rate of negative words among non-neutral tokens
+- avg_positive_polarity: Avg. polarity of positive words
+- avg_negative_polarity: Avg. polarity of negative words
+- title_subjectivity: Title subjectivity
+- title_sentiment_polarity:  Title polarity
+- abs_title_subjectivity: Absolute subjectivity level
+- abs_title_sentiment_polarity: Absolute polarity level
+- shares: Number of shares (target)
 
 
 c) How the data set was cleaned: 
+
 - Original File contained 39797 rows x61 columns
 - Pivoted all days of week Boolean columns to single categorical column [Sunday-Saturday]
 - Pivoted all article catagory Boolean columns to single categorical column [Lifestyle, entertainment, business; social media, tech, world]
