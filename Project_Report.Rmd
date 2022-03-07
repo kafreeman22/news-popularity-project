@@ -156,6 +156,82 @@ analysis.
 ## Descriptive analysis and ANOVA
 **add anova graphs + explanations here**
 
+- **Rate of Positive Words:**
+
+```{r}
+data <- read.csv("Cleaned News Popularity.csv")
+```
+
+```{r}
+library("ggplot2")
+ggplot(data, aes(x = Category, y = rate_positive_words)) +         
+  geom_boxplot()
+
+res.aov <- aov(rate_positive_words ~ Category, data = data)
+
+summary(res.aov)
+```
+**NULL Hypothesis:**
+The mean rate of positive words across all the categories is equal.
+
+**Alternative Hypothesis:**
+The mean rate of positive words across all the categories is NOT equal.
+
+On performing the ANOVA test to check the significance level, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots, we observed that the number of outliers are too high on the lower side of the inter quartile range which clearly agrees to the fact that there is a great amount of variance in the data and the variance is among the categoreis is not equal. 
+
+```{r}
+ggplot(data, aes(x = Category, y = rate_negative_words )) +         
+  geom_boxplot()
+
+```
+
+
+To add on this, when we plot the box plot for the rate of negative words, it appears to be the mirror image for the box plot for rate of positive words.This makes us to emphasize on the fact that the number of positive words and negative words follow the same distribution.
+
+
+- **Number of Images**
+```{r}
+ggplot(data, aes(x = Category, y=num_imgs)) +         
+  geom_boxplot()
+
+res.aov <- aov(num_imgs ~ Category, data = data)
+
+summary(res.aov)
+```
+
+**NULL Hypothesis:**
+The mean number of images across all the categories is equal.
+
+**Alternative Hypothesis:**
+The mean number of images across all the categories is NOT equal.
+
+On performing the ANOVA test to check the significance, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots for the category, we observe that the inter-quartile range of each category varies heavily and the distribution of the outliers above the top whisker varies significantly high for the Entertainment and Lifestyle categories.
+
+- **Number of Videos**
+```{r}
+ggplot(data, aes(x = Category, y = num_videos )) +         
+  geom_boxplot()
+
+res.aov <- aov(num_videos ~ Category, data = data)
+
+summary(res.aov)
+```
+**NULL Hypothesis:**
+The mean number of videos across all the categories is equal.
+
+**Alternative Hypothesis:**
+The mean number of videos across all the categories is NOT equal.
+
+On performing the ANOVA test to check the significance, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots for the category, we observe that the inter-quartile range for business and lifestyle is too low. Also for Business and Entertainment categories, it is observed that there are significant number of outliers in their respective box plots. This concludes on the fact that there is a signifcant change in variance across the categories.
+
+
+
 
 ## Linear Regression
 **add linear regression graphs + explanations here**
