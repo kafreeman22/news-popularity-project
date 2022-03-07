@@ -67,11 +67,11 @@ heatmap(m)
 
 ```{r}
 library(ggplot2)
-#sharesbycategory <- aggregate(MyData$shares, list(MyData$Category), FUN=mean)
-#ggplot(data=sharesbycategory) +
-    #geom_col(aes(x=Group.1, y=x))
+sharesbycategory <- aggregate(MyData$shares, list(MyData$Category), FUN=median)
+ggplot(data=sharesbycategory) +
+    geom_col(aes(x=Group.1, y=x))
 
-#barplot(sharesbycategory$x, names.arg = sharesbycategory$Group.1)
+barplot(sharesbycategory$x, names.arg = sharesbycategory$Group.1)
 ```
 ```{r}
 ggplot(MyData, aes(x = Category, y = log10(shares))) +         
@@ -128,7 +128,16 @@ ggplot(MyData, aes(x = Category, y = global_sentiment_polarity )) +
 ```{r}
 ggplot(MyData, aes(x = Category, y = global_subjectivity)) +         
   geom_boxplot()
+
 ```
+
+```{r}
+res.aov <- aov(global_subjectivity ~ Category, data = MyData)
+
+summary(res.aov)
+
+```
+
 
 ```{r}
 #positivitybycategory <- aggregate(MyData$rate_positive_words, list(MyData$Category), FUN=mean)
@@ -138,7 +147,22 @@ ggplot(MyData, aes(x = Category, y = global_subjectivity)) +
 ```{r}
 ggplot(MyData, aes(x = Category, y = rate_positive_words)) +         
   geom_boxplot()
+
+res.aov <- aov(rate_positive_words ~ Category, data = MyData)
+
+summary(res.aov)
 ```
+NULL Hypothesis:
+The mean rate of positive words in all the categories across the data set is equal.
+
+Alternative Hypothesis:
+The mean rate of positive words in all the categories across the data set is NOT equal.
+
+On performing the ANOVA test to check the significance, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots, we observed that the number of outliers are too high on the lower side of the inter quartile range which clearly agrees to the fact that there is a great amount of variance in the data and the variance is not equal. 
+
+
 
 ```{r}
 #negativitybycategory <- aggregate(MyData$rate_negative_words, list(MyData$Category), FUN=mean)
@@ -148,7 +172,10 @@ ggplot(MyData, aes(x = Category, y = rate_positive_words)) +
 ```{r}
 ggplot(MyData, aes(x = Category, y = rate_negative_words )) +         
   geom_boxplot()
+
 ```
+
+The above graph is the mirror image for the boxplots representing rate_negative_words. This makes us to emphasize on the fact that the number of positive words and negative words follow the same distribution.
 
 ```{r}
 #imagesbycategory <- aggregate(MyData$num_imgs, list(MyData$Category), FUN=mean)
@@ -158,6 +185,29 @@ ggplot(MyData, aes(x = Category, y = rate_negative_words )) +
 ```{r}
 ggplot(MyData, aes(x = Category, y=num_imgs)) +         
   geom_boxplot()
+
+res.aov <- aov(num_imgs ~ Category, data = MyData)
+
+summary(res.aov)
+```
+
+NULL Hypothesis:
+The mean number of images in all the categories across the data set is equal.
+
+Alternative Hypothesis:
+The mean number of images in all the categories across the data set is NOT equal.
+
+On performing the ANOVA test to check the significance, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots for the category, we observe that the inter-quartile range of each category varies heavily and the distribution of the outliers above the top whisker varies significantly high for the Entertainment and Lifestyle categories.
+
+```{r}
+#Testing the equal variance for the categoreis
+
+bartlett.test(num_imgs ~ Category, data =MyData)
+
+oneway.test(num_imgs ~ Category, data=MyData, var.equal=FALSE)
+
 ```
 
 ```{r}
@@ -168,7 +218,21 @@ ggplot(MyData, aes(x = Category, y=num_imgs)) +
 ```{r}
 ggplot(MyData, aes(x = Category, y = num_videos )) +         
   geom_boxplot()
+
+res.aov <- aov(num_videos ~ Category, data = MyData)
+
+summary(res.aov)
 ```
+
+NULL Hypothesis:
+The mean number of videos in all the categories across the data set is equal.
+
+Alternative Hypothesis:
+The mean number of videos in all the categories across the data set is NOT equal.
+
+On performing the ANOVA test to check the significance, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
+
+From the box plots for the category, we observe that the inter-quartile range for business and lifestyle have a very low inter-quartile range (around 0 from visual inspection). Also for Business and Entertainment categories it is observed that there are significant number of outliers in the respective box plots.
 
 ```{r}
 #linksbycategory <- aggregate(MyData$num_hrefs, list(MyData$Category), FUN=mean)
