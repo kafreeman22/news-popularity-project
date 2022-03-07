@@ -147,11 +147,15 @@ analysis.
 - **Rate of Positive Words:**
 
 ```{r}
+data <- read.csv("Cleaned News Popularity.csv")
+```
 
-ggplot(MyData, aes(x = Category, y = rate_positive_words)) +         
+```{r}
+library("ggplot2")
+ggplot(data, aes(x = Category, y = rate_positive_words)) +         
   geom_boxplot()
 
-res.aov <- aov(rate_positive_words ~ Category, data = MyData)
+res.aov <- aov(rate_positive_words ~ Category, data = data)
 
 summary(res.aov)
 ```
@@ -166,20 +170,21 @@ On performing the ANOVA test to check the significance level, we got the p value
 From the box plots, we observed that the number of outliers are too high on the lower side of the inter quartile range which clearly agrees to the fact that there is a great amount of variance in the data and the variance is among the categoreis is not equal. 
 
 ```{r}
-ggplot(MyData, aes(x = Category, y = rate_negative_words )) +         
+ggplot(data, aes(x = Category, y = rate_negative_words )) +         
   geom_boxplot()
 
 ```
+
 
 To add on this, when we plot the box plot for the rate of negative words, it appears to be the mirror image for the box plot for rate of positive words.This makes us to emphasize on the fact that the number of positive words and negative words follow the same distribution.
 
 
 - **Number of Images**
 ```{r}
-ggplot(MyData, aes(x = Category, y=num_imgs)) +         
+ggplot(data, aes(x = Category, y=num_imgs)) +         
   geom_boxplot()
 
-res.aov <- aov(num_imgs ~ Category, data = MyData)
+res.aov <- aov(num_imgs ~ Category, data = data)
 
 summary(res.aov)
 ```
@@ -196,10 +201,10 @@ From the box plots for the category, we observe that the inter-quartile range of
 
 - **Number of Videos**
 ```{r}
-ggplot(MyData, aes(x = Category, y = num_videos )) +         
+ggplot(data, aes(x = Category, y = num_videos )) +         
   geom_boxplot()
 
-res.aov <- aov(num_videos ~ Category, data = MyData)
+res.aov <- aov(num_videos ~ Category, data = data)
 
 summary(res.aov)
 ```
