@@ -3,18 +3,18 @@ title: "Analysis of News Articles"
 author: " "
 date: ""
 output:
-  html_notebook: default
   pdf_document:
     latex_engine: xelatex
+  html_notebook: default
 mainfont: Helvetica
 monofont: Monaco
 ---
 
-a)Introduction:-  
+# Introduction:-  
 Social media is a real world phenomenon of the saying "If the tree falls on the ground and no one is around to hear it, does it make a sound?" Mashable, an independent news platform, is a part of this social media world providing the latest news articles on digital culture, social media and technology. However, not every new article is a hit, and our group aims to find what makes an article popular by analyzing various factors related to the article.
 
 
-b)Data Set Description:-
+# Data Set Description:-
 **Source** :
 We downloaded this data from UCI machine learning repository. The link for the source is:
 **https://archive.ics.uci.edu/ml/datasets/online+news+popularity**
@@ -26,7 +26,7 @@ Number of Instances: 39797
 Number of Attributes: 61
 Missing Values?: No missing values
 
-Information about the attributes used for analyses: 
+Information about the attributes that were considered for analyses: 
 
 - Day of Week: column created from pivoted rows that contains the day of the week the article was published.
 - Category: column created from pivoted rows that contains the the appropriate boolean value of the category that it belonged to.
@@ -53,31 +53,27 @@ Information about the attributes used for analyses:
 - abs_title_sentiment_polarity: Absolute polarity level
 - shares: Number of shares (target)
 
+The final list of variables used for analysis are referred to in the questions section
 
-c) How the data set was cleaned: 
+# How the data set was cleaned: 
 
 - Original File contained 39797 rows x61 columns
 - Pivoted all days of week Boolean columns to single categorical column [Sunday-Saturday]
-- Pivoted all article catagory Boolean columns to single categorical column [Lifestyle, entertainment, business; social media, tech, world]
+- Pivoted all article category Boolean columns to single categorical column [Lifestyle, entertainment, business; social media, tech, world]
 - Removed all rows that have a null value using na.omit()
 - Pivoted File (33509 rows × 48 columns)
 - Removed all articles with O length of 'number of words in the content'
-- Removed columns that are not relevant to our testing. The columns were: ['num_self_hrefs', 'kw_min_min', 'kw_max_min', kw_avg_min', 'kw_min_max', 'kw_max_max', 'kw_avE_max', 'kw_min_avg', 'kw_max_avg', kw_ave_avg', 'self_reference_min_shares','self _reference_max_shares', 'self_reference_avg_sharess' **is this correct?**, 'is_weekend", 'LDA_00', 'LDA_01', 'LDA_02', 'LDA_03', 'LDA_04', 'min_positive_polarity', 'max_positive_polarity', 'min_negative_polarity', ' max_negative_polarity, 'n_non_stop _words']
+- Removed columns that are not relevant to our testing. The columns were: ['num_self_hrefs', 'kw_min_min', 'kw_max_min', kw_avg_min', 'kw_min_max', 'kw_max_max', 'kw_avg_max', 'kw_min_avg', 'kw_max_avg', kw_avg_avg', 'self_reference_min_shares','self_reference_max_shares', 'self_reference_avg_shares', 'is_weekend', 'LDA_00', 'LDA_01', 'LDA_02', 'LDA_03', 'LDA_04', 'min_positive_polarity', 'max_positive_polarity', 'min_negative_polarity', ' max_negative_polarity, 'n_non_stop _words']
 - Multiplied all columns that have a range of 0.0-1.0 by 10. The columns included: ['n_non_stop_words', 'n_on_stop_unique_tokens', 'min_positive_polarity', 'max_positive_polarity', 'avg_negative_polarity', 'min_negative_polarity', 'max_negative_polarity', 'title_subjectivity', 'title_sentiment_polarity', 'abs_title_subjectivity', 'abs _title_sentiment_polarity', 'n_unique_tokens', 'global_subjectivity', 'rate_positive_words', 'rate_negative_words', 'avg_positive_polarity', 'global_sentiment_polarity', 'global_rate_positive_words', 'global_rate_negative_words']
-- Final Clean File used was 32971 rows × 24 columns
+- Final Clean File used has 32971 rows × 24 columns
 
+# Software used: 
+The data cleaning was done using Tableau Prep and Python and the statistical methods were analysed and graphed using R in R Studio. 
 
+# Questions to be analyzed:  
 
+## How do linguistic features vary across different article categories? This question will be applied to each of the following linguistic features one at a time across article category (business, lifestyle, entertainment, technology, world social media; applies for all questions using article category)
 
-d) Software used: 
-The data cleaning was done using Tableau Prep **add if there is anything else** and the statistical methods were analysed and graphed using R in RStudio. 
-
-
-
-
-
-e) Questions to be analyzed:  
-How do linguistic features vary across different article categories? - This question will be applied to each of the following linguistic features one at a time across article category (business, lifestyle, entertainment, technology, world social media; applies for all questions using article category)
 1) How many words are there in an article?
 2) How many words are there in an title of an article?
 3) What is an average token length in an article?
@@ -86,99 +82,99 @@ How do linguistic features vary across different article categories? - This ques
 6) Rate of positive words
 7) Rate of negative words
 
-How do other features vary across article categories? - This question will be applied to to the following variables one at a time split across article category: 
+## How do other features vary across article categories? This question will be applied to to the following variables one at a time split across article category: 
+
 8) Number of images 
 9) Number of videos 
 10) Number of hyperlinks 
 
 What variables affect article popularity (number of shares) on Mashable? - This question will be used to answer the following
-11)What is the distribution of number of shares across article category? 
+
+11) What is the distribution of number of shares across article category? 
 12) Using a linear regression model, understand what is the effect of different variables on the number of shares for an article? Variables and details listed in analysis plan 
 
 
-
-
-
-f) Statistical Methods:-
+# Statistical Methods
 Before diving in deep for the explanation of the Statistical Methods used, we have bifurcated our statistical analysis into two parts: Descriptive Statistics and Inferential Statistics.   
 
-DESCRIPTIVE STATISTICS:
+## DESCRIPTIVE STATISTICS:
 -Descriptive statistics will be used for questions 1-11. 
 -Visualization methods such as box plots and/or descriptive statistics tables split up by article category will be used to describe and report the relationship of each of the variables with article category 
 
-INFERENTIAL STATISTICS:
-f-i) ANOVA:
+## INFERENTIAL STATISTICS:
+
+i) ANOVA:
 - Used for questions 1-11 at significance level = 0.05
-- Along with descriptive analytics, the use of anova showed visualizations with interesting patters. 
+- Along with descriptive Analysis, the use of anova showed visualizations with interesting patters. 
 - Using the power of inferential statistics, the NULL hypothesis and alternative hypothesis under consideration is as:
 Null Hypothesis:
 $H_0: \mu_{business} = \mu_{lifestyle} = \mu_{entertainment} = \mu_{technology} = \mu_{social\ media} = \mu_{world}$
 Alternative Hypothesis:
 $H_A: The\ mean\ value\ is\ not\ equal\ for\ one\ or\ more\ categories$
+
 - P-value will be used to report and interpret results 
 -Assumptions made and their results: 
-  Independence – observations are individual articles and assumption of independence is not violated 
-  Normality – large sample size hence normality assumption holds
-  Variance - does not hold **why?what was done to change this? did it work?**
--Factor variable – Article category 
--Response variable – each variable listed in question 1-11 that will be compared across the factor variable 
--We will not be adjusting for multiple testing since we are using different features for each of the listed questions **need to write??** 
+  - Independence – observations are individual articles and assumption of independence is not violated 
+  - Normality – large sample size hence normality assumption holds
+  - Constant variance - does not hold **why?what was done to change this? did it work?**
 
+- Factor variable – Article category 
+- Response variable – each variable listed in question 1-11 that will be compared across the factor variable 
+- We will not be adjusting for multiple testing since we are using different features for each of the listed questions
+
+ii) LINEAR REGRESSION:
+
+- Used for question 12
+- Assumptions made in the linear regression and their results:
+  - Independence: The data points (observations) represents individual articles without any stratification and hence the independence assumption holds true here in our case.
+  - Constant variance: Applying log transformation to the dependent variable helped us meet this assumption, as can be seen in the scale-location plot
+  - Linearity: Applying log transformation to the dependent variable helped us meet this assumption, as can be seen in the residuals vs fitted values plot
+  - Normality: From the QQ plot, the normality assumption is not met. However, since there are large number of data points, we can proceed with statistical inferences using this model.
+
+- Response variable – number of article shares 
+
+- Independent variables – number of words in article, number of words in title, average token (word) length in article, article polarity, article subjectivity, day of publication (Monday-Sunday), article category (business, lifestyle, technology, world, entertainment, social media), number of images, number of videos, number of hyperlinks
+
+# Results. 
+
+Describe your results clearly and concisely. Use graphical displays and 
+tables to convey descriptive information about the data and the results of the 
+analysis. 
+
+## Descriptive analysis and ANOVA
 **add anova graphs + explanations here**
 
 
-f-ii) LINEAR REGRESSION:
--Used for question 12
-Assumptions made in the linear regression and their results:
--- Independence: The data points (observations) represents individual articles without any stratification and hence the independence assumption holds true here in our case.
--- Constant variance: **-------------------------?????**
--- Linearity: **-------------------------?????**
--- Normality: From the QQ plot, the normality assumption is not met. However, since there are large number of data points, the assumption of normality holds true. **check this answer again**
-Response variable – number of article shares 
-Independent variables – number of words in article, number of words in title, average token (word) length in article, article polarity, article subjectivity, rate of positive words, rate of negative words, day of publication (Monday-Sunday), article category (business, lifestyle, technology, world, entertainment, social media), number of images, number of videos, number of hyperlinks
-
+## Linear Regression
 **add linear regression graphs + explanations here**
 
 
 
-
-
-
-
-g)Results. Describe your results clearly and concisely. Use graphical displays and 
-tables to convey descriptive information about the data and the results of the 
-analysis. 
-
-
-
-
-h)Discussion. This section should briefly summarize the results and conclusions. Also 
+# Discussion. 
+This section should briefly summarize the results and conclusions. Also 
 describe limitations of the analyses, including limitations of the data set as well as 
 of the statistical analyses.
 
+Limitations:
 
+- Only one source of articles
+- Time period of publication is 2013-2015
 
+Due to this findings cannot be generalized to all news articles
 
-
-i)References. List books or articles you consulted. (It is not necessary to do a lot of 
+# References. 
+List books or articles you consulted. (It is not necessary to do a lot of 
 background research, so the reference list should be short.) References for statistical 
 methods used in class (e.g., t-tests, and linear regression) are not required, but 
 references should be given for advanced methods not covered in class.
 
 
-
-
-
-
-j)Tables and Figures. These can be included with the text in the body of the report 
+# Tables and Figures. These can be included with the text in the body of the report 
 or in a separate section at the end. All should have clear titles/captions.
 
 
-
-
-
-
-k)Appendices. You may include more technical aspects of your analysis in an 
+# Appendices. 
+You may include more technical aspects of your analysis in an 
 appendix if it will help with the readability of the main body of your report. 
 Appendices are included in the 20-page limit.
 
