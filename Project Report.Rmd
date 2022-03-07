@@ -10,94 +10,178 @@ mainfont: Helvetica
 monofont: Monaco
 ---
 
-a)Abstract. This should consist of concise statements of the aims, methods, results, 
-and conclusions (eg, 200-300 words).
+a)Introduction:-  
+Social media is a real world phenomenon of the saying "If the tree falls on the ground and no one is around to hear it, does it make a sound?" Mashable, an independent news platform, is a part of this social media world providing the latest news articles on digital culture, social media and technology. However, not every new article is a hit, and our group aims to find what makes an article popular by analyzing various factors related to the article.
 
 
-b)Introduction. Include a clear statement of the aims and questions to be addressed. 
-The goal of the analyses should be clear from the introduction. You may include 
-background material, such as previous research that your analysis builds on, but this 
-should be kept brief.
 
-c)Data Set Description. Describe the data set, including the source of the data, data 
-collection methods, study design (e.g., randomized experiment, observational data, 
-survey, etc.)
 
+b)Data Set Description:-
 **Source** :
-We downloaded this data from UCI machine learning repository.The link for the source is mentioned below:
-
+We downloaded this data from UCI machine learning repository. The link for the source is:
 **https://archive.ics.uci.edu/ml/datasets/online+news+popularity**
 
-This data set summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com)  in a period of two years. Some of the general characteristics of this data set are mentioned below:
-
+This data set summarizes a heterogeneous set of features about articles published by Mashable (www.mashable.com) over a period of two years. General characteristics of this data set are:
 Data Set Characteristics: Multivariate
 Attribute Characteristics: Integer, Real
 Number of Instances: 39797
 Number of Attributes: 61
 Missing Values?: No missing values
-------------need to add the stuff here (the actual number of attributes and stuff).--------------
 
-Attribute Information:
-
-
-d)Statistical Methods. Describe the statistical methods used for the analysis, 
-including discussion of underlying assumptions and explanation for why the 
-methodology you used is appropriate. State the software used as well as any special 
-packages or user-written programs as needed. Code should not be included.
-
-Before diving in deep for the Statistical Methods, we have bifurcated our statistical analysis into two parts:
-
-Descriptive statistics:
-
-Using the principles of graphical excellence and graphical integrity, we have used EDA (exploratory data analysis ) to answer the question:
-**How do linguistic features vary across different article categories?**
-
-The above question will be applied to each of the following linguistic features one at a time across article category (business, lifestyle, entertainment, technology, world social media; applies for all questions using article category)
-
--- How many words are there in an article?
--- How many words are there in an title of an article?
--- What is an average token length in an article?
--- How is the polarity of articles distributed within a range of [-1 to 1]?
--- How is article subjectivity varying with objective and subjective statements?
--- 
-
-**Inferential statistics:**
-
-Using the power of inferential statistics, the NULL hypothesis and alternative hypothesis under consideration is as:
-
-**NULL HYPOTHESIS:**
-
-Using a linear regression model, understand what is the effect of different variables on the number of shares for an article? 
-
-**ALTERNATIVE HYPOTHESIS:**
+Information about the attributes used for analyses: 
+Day of Week: column created from pivoted rows that contains the day of the week the article was published.
+Category: column created from pivoted rows that contains the the appropriate boolean value of the category that it belonged to.
+n_tokens_title: Number of words in the title
+n_tokens_content: Number of words in the content
+n_unique_tokens: Rate of unique words in the content
+n_non_stop_unique_tokens: Rate of unique non-stop words in the content
+num_hrefs: Number of links
+num_imgs: Number of images
+num_videos: Number of videos
+average_token_length: Average length of the words in the content
+num_keywords: Number of keywords in the metadata
+global_subjectivity: Text subjectivity
+global_sentiment_polarity: Text sentiment polarity
+global_rate_positive_words: Rate of positive words in the content
+global_rate_negative_words: Rate of negative words in the content
+rate_positive_words: Rate of positive words among non-neutral tokens
+rate_negative_words: Rate of negative words among non-neutral tokens
+avg_positive_polarity: Avg. polarity of positive words
+avg_negative_polarity: Avg. polarity of negative words
+title_subjectivity: Title subjectivity
+title_sentiment_polarity:  Title polarity
+abs_title_subjectivity: Absolute subjectivity level
+abs_title_sentiment_polarity: Absolute polarity level
+shares: Number of shares (target)
 
 
-Assumptions made in the linear regression:
--- Independence: The data points (observations) represents individual articles without any stratifcation and hence the independence assumption holds good here in our case.
+
+
+c) How the data set was cleaned: 
+- Original File contained 39797 rows x61 columns
+- Pivoted all days of week Boolean columns to single categorical column [Sunday-Saturday]
+- Pivoted all article catagory Boolean columns to single categorical column [Lifestyle, entertainment, business; social media, tech, world]
+- Removed all rows that have a null value using na.omit()
+- Pivoted File (33509 rows × 48 columns)
+- Removed all articles with O length of 'number of words in the content'
+- Removed columns that are not relevant to our testing. The columns were: ['num_self_hrefs', 'kw_min_min', 'kw_max_min', kw_avg_min', 'kw_min_max', 'kw_max_max', 'kw_avE_max', 'kw_min_avg', 'kw_max_avg', kw_ave_avg', 'self_reference_min_shares','self _reference_max_shares', 'self_reference_avg_sharess' **is this correct?**, 'is_weekend", 'LDA_00', 'LDA_01', 'LDA_02', 'LDA_03', 'LDA_04', 'min_positive_polarity', 'max_positive_polarity', 'min_negative_polarity', ' max_negative_polarity, 'n_non_stop _words']
+- Multiplied all columns that have a range of 0.0-1.0 by 10. The columns included: ['n_non_stop_words', 'n_on_stop_unique_tokens', 'min_positive_polarity', 'max_positive_polarity', 'avg_negative_polarity', 'min_negative_polarity', 'max_negative_polarity', 'title_subjectivity', 'title_sentiment_polarity', 'abs_title_subjectivity', 'abs _title_sentiment_polarity', 'n_unique_tokens', 'global_subjectivity', 'rate_positive_words', 'rate_negative_words', 'avg_positive_polarity', 'global_sentiment_polarity', 'global_rate_positive_words', 'global_rate_negative_words']
+- Final Clean File used was 32971 rows × 24 columns
+
+
+
+
+d) Software used: 
+The data cleaning was done using Tableau Prep **add if there is anything else** and the statistical methods were analysed and graphed using R in RStudio. 
+
+
+
+
+
+e) Questions to be analyzed:  
+How do linguistic features vary across different article categories? - This question will be applied to each of the following linguistic features one at a time across article category (business, lifestyle, entertainment, technology, world social media; applies for all questions using article category)
+1) How many words are there in an article?
+2) How many words are there in an title of an article?
+3) What is an average token length in an article?
+4) How is the polarity of articles distributed within a range of [-1 to 1]?
+5) How is article subjectivity varying with objective and subjective statements?
+6) Rate of positive words
+7) Rate of negative words
+
+How do other features vary across article categories? - This question will be applied to to the following variables one at a time split across article category: 
+8) Number of images 
+9) Number of videos 
+10) Number of hyperlinks 
+
+What variables affect article popularity (number of shares) on Mashable? - This question will be used to answer the following
+11)What is the distribution of number of shares across article category? 
+12) Using a linear regression model, understand what is the effect of different variables on the number of shares for an article? Variables and details listed in analysis plan 
+
+
+
+
+
+f) Statistical Methods:-
+Before diving in deep for the explanation of the Statistical Methods used, we have bifurcated our statistical analysis into two parts: Descriptive Statistics and Inferential Statistics.   
+
+DESCRIPTIVE STATISTICS:
+-Descriptive statistics will be used for questions 1-11. 
+-Visualization methods such as box plots and/or descriptive statistics tables split up by article category will be used to describe and report the relationship of each of the variables with article category 
+
+INFERENTIAL STATISTICS:
+f-i) ANOVA:
+- Used for questions 1-11 at significance level = 0.05
+- Along with descriptive analytics, the use of anova showed visualizations with interesting patters. 
+- Using the power of inferential statistics, the NULL hypothesis and alternative hypothesis under consideration is as:
+Null Hypothesis:
+$H_0: \mu_{business} = \mu_{lifestyle} = \mu_{entertainment} = \mu_{technology} = \mu_{social\ media} = \mu_{world}$
+Alternative Hypothesis:
+$H_A: The\ mean\ value\ is\ not\ equal\ for\ one\ or\ more\ categories$
+- P-value will be used to report and interpret results 
+-Assumptions made and their results: 
+  Independence – observations are individual articles and assumption of independence is not violated 
+  Normality – large sample size hence normality assumption holds
+  Variance - does not hold **why?what was done to change this? did it work?**
+-Factor variable – Article category 
+-Response variable – each variable listed in question 1-11 that will be compared across the factor variable 
+-We will not be adjusting for multiple testing since we are using different features for each of the listed questions **need to write??** 
+
+**add anova graphs + explanations here**
+
+
+f-ii) LINEAR REGRESSION:
+-Used for question 12
+Assumptions made in the linear regression and their results:
+-- Independence: The data points (observations) represents individual articles without any stratification and hence the independence assumption holds true here in our case.
 -- Constant variance: **-------------------------?????**
 -- Linearity: **-------------------------?????**
--- Normality: From the QQ plot, the normality assumption does not holds good. But since there are large number of data points, the assumption of normality to hold true holds good.
+-- Normality: From the QQ plot, the normality assumption is not met. However, since there are large number of data points, the assumption of normality holds true. **check this answer again**
+Response variable – number of article shares 
+Independent variables – number of words in article, number of words in title, average token (word) length in article, article polarity, article subjectivity, rate of positive words, rate of negative words, day of publication (Monday-Sunday), article category (business, lifestyle, technology, world, entertainment, social media), number of images, number of videos, number of hyperlinks
+
+**add linear regression graphs + explanations here**
 
 
-e)Results. Describe your results clearly and concisely. Use graphical displays and 
+
+
+
+
+
+g)Results. Describe your results clearly and concisely. Use graphical displays and 
 tables to convey descriptive information about the data and the results of the 
 analysis. 
 
 
-f)Discussion. This section should briefly summarize the results and conclusions. Also 
+
+
+h)Discussion. This section should briefly summarize the results and conclusions. Also 
 describe limitations of the analyses, including limitations of the data set as well as 
 of the statistical analyses.
 
 
-g)References. List books or articles you consulted. (It is not necessary to do a lot of 
+
+
+
+i)References. List books or articles you consulted. (It is not necessary to do a lot of 
 background research, so the reference list should be short.) References for statistical 
 methods used in class (e.g., t-tests, and linear regression) are not required, but 
 references should be given for advanced methods not covered in class.
 
-h)Tables and Figures. These can be included with the text in the body of the report 
+
+
+
+
+
+j)Tables and Figures. These can be included with the text in the body of the report 
 or in a separate section at the end. All should have clear titles/captions.
 
 
-i)Appendices. You may include more technical aspects of your analysis in an 
+
+
+
+
+k)Appendices. You may include more technical aspects of your analysis in an 
 appendix if it will help with the readability of the main body of your report. 
 Appendices are included in the 20-page limit.
+
+
