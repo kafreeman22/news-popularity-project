@@ -4,44 +4,104 @@ author: "Hriday Baghar"
 output: html_notebook
 ---
 
-# Regression model
-```{r}
+# Loading Dataset
+```{r, echo=FALSE}
 data <- read.csv("Cleaned News Popularity.csv")
 str(data)
-
-names(data)
 ```
-```{r}
+
+# Exploring correlated features
+```{r, echo=FALSE}
+cormat <- cor(dplyr::select_if(data, is.numeric))
+
+library(reshape2)
+melted_cormat <- melt(cormat)
+
+library(ggplot2)
+ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+We should drop highly correlated features so as to not run into multi-collinearity. Here are some selections we will make for highly correlated variables:
+
+- rate positive words, rate negative words, polarity: polarity will be used
+
+# Regression model
+## Base model
+```{r, echo=FALSE}
 #Building regression model with initial chosen variables
 
 base.model <- lm(shares ~ Day.of.Week + Category + n_tokens_title + n_tokens_content +
                    num_hrefs + num_imgs + num_videos + average_token_length +
                    global_subjectivity + global_sentiment_polarity +
-                   rate_positive_words + rate_negative_words +
-                   title_subjectivity + title_subjectivity, data = data)
+                   title_sentiment_polarity, data = data)
 
 summary(base.model)
 ```
-
-```{r}
+Testing model assumptions
+```{r, echo=FALSE}
 plot(base.model)
 ```
-```{r}
-boxplot(log10(base.model$residuals))
-```
+We observe the following:
 
-```{r}
+- It is not clear if linearity holds, the range of residuals is very high
+- Constant varaince assumption does not appear to be met
+
+# Regression model with log transformed target variable
+```{r, echo=FALSE}
 #Transforming target variable to log scale and repeating model building and diagnostics
 
-log.model <- lm(log(shares) ~ Day.of.Week + Category + n_tokens_title + n_tokens_content +
+log.model <- lm(log10(shares) ~ Day.of.Week + Category + n_tokens_title + n_tokens_content +
                    num_hrefs + num_imgs + num_videos + average_token_length +
                    global_subjectivity + global_sentiment_polarity +
-                   rate_positive_words + rate_negative_words +
-                   title_subjectivity + title_subjectivity, data = data)
-
-summary(log.model)
+                   title_sentiment_polarity, data = data)
 ```
-```{r}
+
+Testing model assumptions for target variable converted to log:
+```{r, echo=FALSE}
 plot(log.model)
 ```
+The assumptions of linearity and constant variance appear to be fulfilled for this model.
 
+Model results:
+```{r, echo=FALSE}
+summary(log.model)
+```
+All coefficients were found to be significant other than number of tokens in title, number of tokens in content, and article polarity.
+
+We convert the results to percentage changes and create confidence intervals for the same.
+```{r, echo=FALSE}
+options(scipen=999)
+
+get_percent_change <- function(coef){
+  return ((10^coef - 1)*100)
+}
+estimates.and.ci <- data.frame(percent_change = get_percent_change(log.model$coefficients), get_percent_change(confint(log.model)))
+names(estimates.and.ci) <- c("percent_change_estimate", "lower.ci", "upper.ci")
+round(estimates.and.ci,3)
+options(scipen=0)
+```
+# Results
+
+Notable findings from regression analysis, every conclusion must be interpreted holding all other model varaibles at a constant value:
+
+- Impact of day of week of publication on number of shares:
+  
+  - Articles published on Friday are more popular than those published on Tuesday (6.77% less shares), Wednesday (7.3% less shares) and Thursday (6.5% less shares)
+  
+  - Articles published on weekends are more popular than those on any other weekday (34.53% more shares on Sunday and 28.62% more shares on Saturday than that of Friday on average)
+  
+  - This is interesting and is likely due to engagement being high on days when people are generally not working
+  
+- It appears that World and Entertainment are the least popular categories on Mashable and Social Media and Tech are the most popular categories on Mashable (reference category in model is Business)
+  
+  - Social Media articles are shared 35.22% more and Tech articles are shared 13.5% more than Business articles on average
+  
+- It appears articles with longer words on average are not as widely shared. An increase in average length of words in an article by 1 unit decreases the number of shares by 13.59% on average
+
+- Articles that are subjective in nature tend to be more popular. A 1 unit increase in subjectivity score increases the number of shares by 6.22% on average
+
+- It looks like more hyperlinks, images and videos in an article have a positive effect on number of shares. The table outlines the precentage change in shares for one unit increase in hyperlink/image/video which could be why the percentage changes are smaller
+
+- Features related to polarity, number of words in article and title do not appear to have a meaningful impact on the number of shares
+  
