@@ -1,7 +1,9 @@
 ---
 title: "Regression Analysis and Diagnostics"
 author: "Hriday Baghar"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 # Loading Dataset

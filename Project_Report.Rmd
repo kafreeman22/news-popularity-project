@@ -3,9 +3,9 @@ title: "Analysis of News Articles"
 author: " "
 date: ""
 output:
-  html_notebook: default
   pdf_document:
     latex_engine: xelatex
+  html_notebook: default
 mainfont: Helvetica
 monofont: Monaco
 ---
@@ -344,6 +344,7 @@ We observe the following:
 - Constant varaince assumption does not appear to be met as seen from the scale-location plot
 
 Here are the model plots for a log transformed variable:
+
 ```{r, echo=FALSE}
 plot(log.model, which = c(1,3))
 ```
