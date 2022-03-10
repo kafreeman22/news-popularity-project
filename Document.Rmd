@@ -74,12 +74,16 @@ ggplot(data=sharesbycategory) +
 barplot(sharesbycategory$x, names.arg = sharesbycategory$Group.1)
 ```
 ```{r}
-ggplot(MyData, aes(x = Category, y = log10(shares))) +         
+ggplot(MyData, aes(x = Day.of.Week, y = shares)) +         
   geom_boxplot() 
 ```
 ```{r}
 library(dplyr)
 MyData %>% group_by(Category) %>% summarise(var = var(shares), var.log.shares = var(log(shares)), mean.shares = mean(shares), median.shares = median(shares))
+
+bartlett.test(shares ~ Category, data =MyData)
+
+oneway.test(shares ~ Category, data=MyData, var.equal=FALSE)
 
 summary(aov(log(shares) ~ Category, data = MyData))
 ```
@@ -97,6 +101,10 @@ ggplot(MyData, aes(x = Category, y = n_tokens_title)) +
 
 MyData %>% group_by(Category) %>% summarise(var = var(n_tokens_title), mean = mean(n_tokens_title), median.shares = median(n_tokens_title))
 
+bartlett.test(n_tokens_title ~ Category, data =MyData)
+
+oneway.test(n_tokens_title ~ Category, data=MyData, var.equal=FALSE)
+
 summary(aov(n_tokens_title ~ Category, data = MyData))
 ```
 
@@ -109,7 +117,11 @@ summary(aov(n_tokens_title ~ Category, data = MyData))
 ggplot(MyData, aes(x = Category, y = n_tokens_content)) +         
   geom_boxplot()
 
-MyData %>% group_by(Category) %>% summarise(var = (n_tokens_content), var.log = var(log(n_tokens_content)), mean = mean(n_tokens_content), median = median(n_tokens_content))
+MyData %>% group_by(Category) %>% summarise(var = var(n_tokens_content), var.log = var(log(n_tokens_content)), mean = mean(n_tokens_content), median = median(n_tokens_content))
+
+bartlett.test(n_tokens_content ~ Category, data =MyData)
+
+oneway.test(n_tokens_content ~ Category, data=MyData, var.equal=FALSE)
 
 summary(aov(log(n_tokens_content) ~ Category, data = MyData))
 ```
@@ -277,6 +289,9 @@ ggplot(MyData, aes(x = Category, y = num_hrefs)) +
   geom_boxplot()
 
 MyData %>% group_by(Category) %>% summarise(var = var(num_hrefs), var.log = var(log(num_hrefs)), mean = mean(num_hrefs), median = median(num_hrefs))
+
+oneway.test(num_hrefs ~ Category, data = MyData, var.equal = FALSE)
+summary(aov(num_hrefs ~ Category, data = MyData))
 ```
 
 ```{r}
