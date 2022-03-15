@@ -117,7 +117,7 @@ Before diving in deep for the explanation of the Statistical Methods used, we ha
 
 i) ANOVA:
 - Used for questions 1-11 at significance level = 0.05
-- Along with descriptive Analysis, the use of anova showed visualizations with interesting patters. 
+- Along with descriptive Analysis, the use of anova showed visualizations with interesting patterns. 
 - Using the power of inferential statistics, the NULL hypothesis and alternative hypothesis under consideration is as:
 Null Hypothesis:
 $H_0: \mu_{business} = \mu_{lifestyle} = \mu_{entertainment} = \mu_{technology} = \mu_{social\ media} = \mu_{world}$
@@ -128,7 +128,7 @@ $H_A: The\ mean\ value\ is\ not\ equal\ for\ one\ or\ more\ categories$
 -Assumptions made and their results: 
   - Independence – observations are individual articles and assumption of independence is not violated 
   - Normality – large sample size hence normality assumption holds
-  - Constant variance - does not hold **why?what was done to change this? did it work?**
+  - Constant variance - does not hold for number of images, videos, hyperlinks. Only descriptive statistics reported there
 
 - Factor variable – Article category 
 - Response variable – each variable listed in question 1-11 that will be compared across the factor variable 
@@ -141,7 +141,7 @@ ii) LINEAR REGRESSION:
   - Independence: The data points (observations) represents individual articles without any stratification and hence the independence assumption holds true here in our case.
   - Constant variance: Applying log transformation to the dependent variable helped us meet this assumption, as can be seen in the scale-location plot
   - Linearity: Applying log transformation to the dependent variable helped us meet this assumption, as can be seen in the residuals vs fitted values plot
-  - Normality: From the QQ plot, the normality assumption is not met. However, since there are large number of data points, we can proceed with statistical inferences using this model.
+  - Normality: From the Q-Q plot, the normality assumption is not met. However, since there are large number of data points, we can proceed with statistical inferences using this model.
 
 - Response variable – number of article shares 
 
@@ -156,7 +156,11 @@ analysis.
 ## Descriptive analysis and ANOVA
 **add anova graphs + explanations here**
 
-- **Rate of Positive Words:**
+# ADD SUMMARY TABLE FOR ALL RESULTS PLEASE
+
+- **Article Word Count**
+
+- **Article Polarity**
 
 ```{r}
 data <- read.csv("Cleaned News Popularity.csv")
@@ -164,32 +168,30 @@ data <- read.csv("Cleaned News Popularity.csv")
 
 ```{r}
 library("ggplot2")
-ggplot(data, aes(x = Category, y = rate_positive_words)) +         
+ggplot(data, aes(x = Category, y = global_sentiment_polarity)) +         
   geom_boxplot()
 
-res.aov <- aov(rate_positive_words ~ Category, data = data)
+res.aov <- aov(global_sentiment_polarity ~ Category, data = data)
 
 summary(res.aov)
 ```
 **NULL Hypothesis:**
-The mean rate of positive words across all the categories is equal.
+The mean article polarity across all the categories is equal.
 
 **Alternative Hypothesis:**
-The mean rate of positive words across all the categories is NOT equal.
+The mean article polarity across all the categories is NOT equal.
 
 On performing the ANOVA test to check the significance level, we got the p value as **<2e-16**. Since the value of p is less than 0.05, we reject the NULL hypothesis.
 
 From the box plots, we observed that the number of outliers are too high on the lower side of the inter quartile range which clearly agrees to the fact that there is a great amount of variance in the data and the variance is among the categoreis is not equal. 
 
-```{r}
-ggplot(data, aes(x = Category, y = rate_negative_words )) +         
-  geom_boxplot()
+- **Article subjectivity**
 
-```
+INCLUDE BOXPLOT AND DESCRIPTIVE STATS TABLE IN THIS SECTION.
 
+- **Average token length in article**
 
-To add on this, when we plot the box plot for the rate of negative words, it appears to be the mirror image for the box plot for rate of positive words.This makes us to emphasize on the fact that the number of positive words and negative words follow the same distribution.
-
+INCLUDE BOXPLOT AND DESCRIPTIVE STATS TABLE IN THIS SECTION.
 
 - **Number of Images**
 ```{r}
@@ -200,6 +202,8 @@ res.aov <- aov(num_imgs ~ Category, data = data)
 
 summary(res.aov)
 ```
+
+INCLUDE MEAN AND MEDIAN TABLES IN THIS SECTION, REMOVE ANOVA RESULTS (CONSTANT VARIANCE NOT MET, LOG TRANSFORM NOT POSSIBLE, FUTURE SCOPE CAN BE TO IDENTIFY SUITABLE TEST)
 
 **NULL Hypothesis:**
 The mean number of images across all the categories is equal.
@@ -220,6 +224,9 @@ res.aov <- aov(num_videos ~ Category, data = data)
 
 summary(res.aov)
 ```
+
+INCLUDE MEAN AND MEDIAN TABLES IN THIS SECTION, REMOVE ANOVA RESULTS (CONSTANT VARIANCE NOT MET, LOG TRANSFORM NOT POSSIBLE, FUTURE SCOPE CAN BE TO IDENTIFY SUITABLE TEST)
+
 **NULL Hypothesis:**
 The mean number of videos across all the categories is equal.
 
@@ -230,11 +237,12 @@ On performing the ANOVA test to check the significance, we got the p value as **
 
 From the box plots for the category, we observe that the inter-quartile range for business and lifestyle is too low. Also for Business and Entertainment categories, it is observed that there are significant number of outliers in their respective box plots. This concludes on the fact that there is a signifcant change in variance across the categories.
 
+- **Number of hyperlinks**
 
-
+INCLUDE BOXPLOT, MEAN AND MEDIAN TABLES IN THIS SECTION, REMOVE ANOVA RESULTS (CONSTANT VARIANCE NOT MET, LOG TRANSFORM NOT POSSIBLE, FUTURE SCOPE CAN BE TO IDENTIFY SUITABLE TEST)
 
 ## Linear Regression
-**add linear regression graphs + explanations here**
+
 ```{r, echo=FALSE}
 #Transforming target variable to log scale and repeating model building and diagnostics
 
@@ -246,7 +254,7 @@ log.model <- lm(log10(shares) ~ Day.of.Week + Category + n_tokens_title + n_toke
 
 Model results, parameter estimates and their significance:
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(summary(log.model)$coefficients)
+knitr::kable(round(summary(log.model)$coefficients,3))
 ```
 
 _Table 1: Regression model coefficients_
@@ -276,6 +284,8 @@ of the statistical analyses.
 
 ## Linear Regression
 
+We found that the $Adjusted \ R^2 = 0.0734$. While this is low when assessing model fit, we can still draw statistical inferences from the model since the assumptions of the model are met. For this reason, we also provide a confidence interval for each estimate.
+
 Notable findings from regression analysis, every conclusion must be interpreted holding all other model varaibles at a constant value:
 
 - Impact of day of week of publication on number of shares:
@@ -298,7 +308,7 @@ Notable findings from regression analysis, every conclusion must be interpreted 
 
 - Features related to polarity, number of words in article and title do not appear to have a meaningful impact on the number of shares
 
-# Limitations: **need to write better**
+# Limitations: **PLEASE WRITE IN BETTER FORM**
 
 - Only one source of articles
 - Time period of publication is 2013-2015
@@ -333,7 +343,7 @@ base.model <- lm(shares ~ Day.of.Week + Category + n_tokens_title + n_tokens_con
 ```
 
 ```{r, echo=FALSE}
-plot(base.model, which = c(1,3))
+plot(base.model, which = c(1:3))
 ```
 
 _Figure x: Regression diagnostics plots for a non-transformed dependent variable_
@@ -346,7 +356,7 @@ We observe the following:
 Here are the model plots for a log transformed variable:
 
 ```{r, echo=FALSE}
-plot(log.model, which = c(1,3))
+plot(log.model, which = c(1:3))
 ```
 
 _Figure x: Regression diagnostics plots for a log-transformed dependent variable_
@@ -354,3 +364,6 @@ _Figure x: Regression diagnostics plots for a log-transformed dependent variable
 The assumptions of linearity and constant variance appear to be fulfilled for this model.
 
 ### Normality assumptions
+
+We can see that in both Q-Q plots, the normality assumption appears to be violated. We can still proceed with the analysis since the number of samples in our dataset is fairly large.
+
